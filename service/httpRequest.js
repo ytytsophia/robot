@@ -45,7 +45,8 @@ exports.send = function(ajaxUrl,type){
             try{
                 var parsedData = rawData;
                 result = parsedData;
-                console.log(parsedData);
+                return result;
+                // console.log(parsedData);
             } catch(e){
                 Log.error(e.message);
             }
@@ -56,5 +57,6 @@ exports.send = function(ajaxUrl,type){
     });
     //req.write(postData);
     req.end();
+    console.log(result);
     return result;
 }
