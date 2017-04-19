@@ -1,0 +1,24 @@
+{
+  "name": "robot",
+  "version": "1.0.0",
+  "description": "mock data fit with robot",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.15.2",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sophiazzw/robot.git"
+  },
+  "keywords": [
+    "robot",
+    "nodejs",
+    "middleware"
+  ],
+  "author": "sophiazzw",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sophiazzw/robot/issues"
+  },
+  "homepage": "https://github.com/sophiazzw/robot#readme"
+}
