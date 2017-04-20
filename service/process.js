@@ -1,8 +1,8 @@
 var path = require('path'),
-    _ = require('../lib/util.js'),
+    Util = require('../lib/util.js'),
     Log = require('../lib/log.js'),
     cheerio = require('cheerio'),
-    Template = require('backbone');
+    _ = require('underscore');
 
 var templateInfo = {};
 var HttpRequest = require('./httpRequest.js');
@@ -12,17 +12,34 @@ function parseHtml(rawhtml){
 }
 
 exports.makeHtml = function(url){
-	var rawhtml = HttpRequest.send(url,'html');
-	console.log(rawhtml)
-	var $ = cheerio.load(rawhtml.toString()),
-		$template = $('script[data-url]');
+	var request = HttpRequest.request(url,'html');
 
-	var ajaxUrl = $template.attr('data-url'),
-		template = $template.html();
-	var asyncHtml = Template.template(template);
-	console.log(asyncHtml);
-	$('body').append(asyncHtml);
-	console.log($.html());
-	return $.html();
+    request.then(function(data){
+        var $ = cheerio.load(data),
+            $template = $('[data-url]');
+
+        if($template.length == 0){
+            return data;
+        }
+        dataUrl = $template.attr('data-url');
+
+        var tpl = _.template($template.html());
+        var dataRequest = HttpRequest.request(dataUrl,'json');
+
+        dataRequest.then(function(json){
+            var asyncHtml = tpl({data:JSON.parse(json)});
+            $('body').append(asyncHtml);
+            console.log($.html());
+        });
+
+    });
+	// var $ = cheerio.load(rawhtml.toString()),
+	// 	$template = $('script[data-url]');
+
+	// var ajaxUrl = $template.attr('data-url'),
+	// 	template = $template.html();
+	// var asyncHtml = _.template(template);
+	// $('body').append(asyncHtml);
+	// console.log($.html());
 }
 

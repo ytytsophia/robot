@@ -1,22 +1,24 @@
 var path = require('path'),
     http = require('http'),
     _ = require('../lib/util.js'),
-    Log = require('../lib/log.js');
+    Log = require('../lib/log.js'),
+    Q = require('q');
 
 var ContentType = {
     'html' : 'text/html',
     'json' : 'application/json'
 };
 
-exports.send = function(ajaxUrl,type){
+exports.request = function(ajaxUrl,type){
     var options = {
         hostname : 'localhost',
         port : 6060,
         path : ajaxUrl,
         method : 'get',
     };
-    var result ;
-    
+    var defered = Q.defer();
+    var rawData = '';
+
     var req = http.request(options, function(res){
         var statusCode = res.statusCode,
             contentType = res.headers['content-type'],
@@ -37,26 +39,22 @@ exports.send = function(ajaxUrl,type){
         }
 
         res.setEncoding('utf-8');
-        var rawData = '';
         res.on('data', function(chunk){
             rawData += chunk;
+            return;
         });
-        res.on('end', function(){
+        res.on('end', function(code){
             try{
-                var parsedData = rawData;
-                result = parsedData;
-                return result;
-                // console.log(parsedData);
+                defered.resolve(rawData);
             } catch(e){
                 Log.error(e.message);
             }
         });
     });
+
     req.on('error', function(e){
         Log.error('Error：' + e.message);
     });
-    //req.write(postData);
     req.end();
-    console.log(result);
-    return result;
+    return defered.promise;
 }

@@ -9,7 +9,7 @@ Makedoc.getPage = function(req, res){
     res.send(Process.makeHtml(url));
 }
 
-Makedoc.getJson = function(req,res){
-    var url = req.url;
-    res.send(HttpRequest.send(url,'json'));
-}
+// Makedoc.getJson = function(req,res){
+//     var url = req.url;
+//     res.send(HttpRequest.send(url,'json'));
+// }
